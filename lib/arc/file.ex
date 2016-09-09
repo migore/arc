@@ -32,6 +32,14 @@ defmodule Arc.File do
     end
   end
 
+  # Accepts a map conforming to %Plug.Upload{} syntax
+  def new(%{"filename" => filename, "path" => path}) do
+    case File.exists?(path) do
+      true -> %Arc.File{ path: path, file_name: filename }
+      false -> {:error, :no_file}
+    end
+  end
+
   def ensure_path(file = %{path: path}) when is_binary(path), do: file
   def ensure_path(file = %{binary: binary}) when is_binary(binary), do: write_binary(file)
 
